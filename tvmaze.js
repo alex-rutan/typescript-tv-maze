@@ -12785,7 +12785,22 @@ function getShowsByTerm(term) {
                 case 1:
                     res = _a.sent();
                     console.log(res.data);
-                    return [2 /*return*/, res.data];
+                    // let shows: Show[] = res.data.map( (result:{show:Show}) => ({
+                    //   "id": result.show.id,
+                    //   "name": result.show.name,
+                    //   "summary": result.show.summary,
+                    //   "image": result.show.image ? result.show.image?.medium : "https://i.redd.it/km17n5skrid11.jpg"
+                    // }))
+                    // return shows;
+                    return [2 /*return*/, res.data.map(function (result) {
+                            var _a;
+                            return ({
+                                id: result.show.id,
+                                name: result.show.name,
+                                summary: result.show.summary,
+                                image: result.show.image ? (_a = result.show.image) === null || _a === void 0 ? void 0 : _a.medium : "https://i.redd.it/km17n5skrid11.jpg"
+                            });
+                        })];
             }
         });
     });

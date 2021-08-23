@@ -19,14 +19,26 @@ interface Show {
   id: number;
   name: string;
   summary: string;
-  image: string;
+  image: {medium: string};
 }
 
 async function getShowsByTerm(term: string): Promise<Show[]> {
   // ADD: Remove placeholder & make request to TVMaze search shows API.
   const res = await axios.get(`${API_BASE_URL}/search/shows?q=${term}`);
   console.log(res.data);
-  return res.data;
+  // let shows: Show[] = res.data.map( (result:{show:Show}) => ({
+  //   "id": result.show.id,
+  //   "name": result.show.name,
+  //   "summary": result.show.summary,
+  //   "image": result.show.image ? result.show.image?.medium : "https://i.redd.it/km17n5skrid11.jpg"
+  // }))
+  // return shows;
+  return res.data.map( (result:{show:Show}) => ({
+    id: result.show.id,
+    name: result.show.name,
+    summary: result.show.summary,
+    image: result.show.image ? result.show.image?.medium : "https://i.redd.it/km17n5skrid11.jpg"
+  }))
 }
 
   // return [
