@@ -31,7 +31,7 @@ interface Episode {
 }
 
 async function getShowsByTerm(term: string): Promise<Show[]> {
-  const res = await axios.get(`${API_BASE_URL}/search/shows?q=${term}`);
+  const res = await axios.get(`${API_BASE_URL}search/shows?q=${term}`);
   console.log(res.data);
   return res.data.map( (result:{show:Show}) => ({
     id: result.show.id,
@@ -96,11 +96,11 @@ $searchForm.on("submit", async function (evt) :Promise<void> {
 async function getEpisodesOfShow(id: number): Promise<Episode[]> {
   const res = await axios.get(`${API_BASE_URL}shows/${id}/episodes`);
   console.log(res.data);
-  return res.data.map((result: { episode: Episode }) => ({
-    id: result.episode.id,
-    name: result.episode.name,
-    season: result.episode.season,
-    number: result.episode.number
+  return res.data.map((result: Episode ) => ({
+    id: result.id,
+    name: result.name,
+    season: result.season,
+    number: result.number
   }));
 }
 
@@ -118,3 +118,17 @@ function populateEpisodes(episodes: Episode[]) {
   }
   $episodesArea.show();
 }
+
+/** Handle episode button click: get episodes from API and display.
+ */
+
+ async function searchForEpisodesAndDisplay(evt) {
+  const id :number = Number($(evt.target).parent().parent().parent().data("show-id"));
+  const episodes :Episode[] = await getEpisodesOfShow(id);
+
+  populateEpisodes(episodes);
+}
+
+$showsList.on("click", ".Show-getEpisodes", async function (evt) :Promise<void> {
+  await searchForEpisodesAndDisplay(evt)
+});

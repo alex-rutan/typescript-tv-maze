@@ -12782,7 +12782,7 @@ function getShowsByTerm(term) {
         var res;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.get(API_BASE_URL + "/search/shows?q=" + term)];
+                case 0: return [4 /*yield*/, axios_1.default.get(API_BASE_URL + "search/shows?q=" + term)];
                 case 1:
                     res = _a.sent();
                     console.log(res.data);
@@ -12855,10 +12855,10 @@ function getEpisodesOfShow(id) {
                     res = _a.sent();
                     console.log(res.data);
                     return [2 /*return*/, res.data.map(function (result) { return ({
-                            id: result.episode.id,
-                            name: result.episode.name,
-                            season: result.episode.season,
-                            number: result.episode.number
+                            id: result.id,
+                            name: result.name,
+                            season: result.season,
+                            number: result.number
                         }); })];
             }
         });
@@ -12874,6 +12874,36 @@ function populateEpisodes(episodes) {
     }
     $episodesArea.show();
 }
+/** Handle episode button click: get episodes from API and display.
+ */
+function searchForEpisodesAndDisplay(evt) {
+    return __awaiter(this, void 0, void 0, function () {
+        var id, episodes;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    id = Number($(evt.target).parent().parent().parent().data("show-id"));
+                    return [4 /*yield*/, getEpisodesOfShow(id)];
+                case 1:
+                    episodes = _a.sent();
+                    populateEpisodes(episodes);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+$showsList.on("click", ".Show-getEpisodes", function (evt) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, searchForEpisodesAndDisplay(evt)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+});
 
 
 /***/ })
