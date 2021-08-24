@@ -33,11 +33,11 @@ interface Episode {
 async function getShowsByTerm(term: string): Promise<Show[]> {
   const res = await axios.get(`${API_BASE_URL}search/shows?q=${term}`);
   console.log(res.data);
-  return res.data.map( (result:{show:Show}) => ({
+  return res.data.map( (result:{show:Show}):any => ({
     id: result.show.id,
     name: result.show.name,
     summary: result.show.summary,
-    image: result.show.image ? result.show.image?.medium : "https://i.redd.it/km17n5skrid11.jpg"
+    image: result.show.image ? result.show.image.medium : "https://i.redd.it/km17n5skrid11.jpg"
   }))
 }
 
@@ -76,7 +76,7 @@ function populateShows(shows: Show[]) {
  */
 
 async function searchForShowAndDisplay() {
-  const term :string = String($("#searchForm-term").val());
+  const term :string = $("#searchForm-term").val() as string;
   const shows :Show[] = await getShowsByTerm(term);
 
   $episodesArea.hide();
@@ -96,7 +96,7 @@ $searchForm.on("submit", async function (evt) :Promise<void> {
 async function getEpisodesOfShow(id: number): Promise<Episode[]> {
   const res = await axios.get(`${API_BASE_URL}shows/${id}/episodes`);
   console.log(res.data);
-  return res.data.map((result: Episode ) => ({
+  return res.data.map((result: Episode ):Episode => ({
     id: result.id,
     name: result.name,
     season: result.season,
@@ -122,13 +122,11 @@ function populateEpisodes(episodes: Episode[]) {
 /** Handle episode button click: get episodes from API and display.
  */
 
- async function searchForEpisodesAndDisplay(evt) {
+ async function searchForEpisodesAndDisplay(evt:JQuery.ClickEvent) {
   const id :number = Number($(evt.target).parent().parent().parent().data("show-id"));
   const episodes :Episode[] = await getEpisodesOfShow(id);
 
   populateEpisodes(episodes);
 }
 
-$showsList.on("click", ".Show-getEpisodes", async function (evt) :Promise<void> {
-  await searchForEpisodesAndDisplay(evt)
-});
+$showsList.on("click", ".Show-getEpisodes", searchForEpisodesAndDisplay);

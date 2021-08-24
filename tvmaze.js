@@ -12786,15 +12786,12 @@ function getShowsByTerm(term) {
                 case 1:
                     res = _a.sent();
                     console.log(res.data);
-                    return [2 /*return*/, res.data.map(function (result) {
-                            var _a;
-                            return ({
-                                id: result.show.id,
-                                name: result.show.name,
-                                summary: result.show.summary,
-                                image: result.show.image ? (_a = result.show.image) === null || _a === void 0 ? void 0 : _a.medium : "https://i.redd.it/km17n5skrid11.jpg"
-                            });
-                        })];
+                    return [2 /*return*/, res.data.map(function (result) { return ({
+                            id: result.show.id,
+                            name: result.show.name,
+                            summary: result.show.summary,
+                            image: result.show.image ? result.show.image.medium : "https://i.redd.it/km17n5skrid11.jpg"
+                        }); })];
             }
         });
     });
@@ -12817,7 +12814,7 @@ function searchForShowAndDisplay() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    term = String($("#searchForm-term").val());
+                    term = $("#searchForm-term").val();
                     return [4 /*yield*/, getShowsByTerm(term)];
                 case 1:
                     shows = _a.sent();
@@ -12892,18 +12889,7 @@ function searchForEpisodesAndDisplay(evt) {
         });
     });
 }
-$showsList.on("click", ".Show-getEpisodes", function (evt) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, searchForEpisodesAndDisplay(evt)];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-});
+$showsList.on("click", ".Show-getEpisodes", searchForEpisodesAndDisplay);
 
 
 /***/ })
