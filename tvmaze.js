@@ -12774,6 +12774,7 @@ var axios_1 = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 var $showsList = $("#showsList");
 var $episodesArea = $("#episodesArea");
+var $episodesList = $("#episodesList");
 var $searchForm = $("#searchForm");
 var API_BASE_URL = "https://api.tvmaze.com/";
 function getShowsByTerm(term) {
@@ -12785,13 +12786,6 @@ function getShowsByTerm(term) {
                 case 1:
                     res = _a.sent();
                     console.log(res.data);
-                    // let shows: Show[] = res.data.map( (result:{show:Show}) => ({
-                    //   "id": result.show.id,
-                    //   "name": result.show.name,
-                    //   "summary": result.show.summary,
-                    //   "image": result.show.image ? result.show.image?.medium : "https://i.redd.it/km17n5skrid11.jpg"
-                    // }))
-                    // return shows;
                     return [2 /*return*/, res.data.map(function (result) {
                             var _a;
                             return ({
@@ -12805,30 +12799,12 @@ function getShowsByTerm(term) {
         });
     });
 }
-// return [
-//   {
-//     id: 1767,
-//     name: "The Bletchley Circle",
-//     summary:
-//       `<p><b>The Bletchley Circle</b> follows the journey of four ordinary
-//          women with extraordinary skills that helped to end World War II.</p>
-//        <p>Set in 1952, Susan, Millie, Lucy and Jean have returned to their
-//          normal lives, modestly setting aside the part they played in
-//          producing crucial intelligence, which helped the Allies to victory
-//          and shortened the war. When Susan discovers a hidden code behind an
-//          unsolved murder she is met by skepticism from the police. She
-//          quickly realises she can only begin to crack the murders and bring
-//          the culprit to justice with her former friends.</p>`,
-//     image:
-//         "http://static.tvmaze.com/uploads/images/medium_portrait/147/369403.jpg"
-//   }
-// ]
 /** Given list of shows, create markup for each and to DOM */
 function populateShows(shows) {
     $showsList.empty();
     for (var _i = 0, shows_1 = shows; _i < shows_1.length; _i++) {
         var show = shows_1[_i];
-        var $show = $("<div data-show-id=\"" + show.id + "\" class=\"Show col-md-12 col-lg-6 mb-4\">\n         <div class=\"media\">\n           <img\n              src=\"http://static.tvmaze.com/uploads/images/medium_portrait/160/401704.jpg\"\n              alt=\"Bletchly Circle San Francisco\"\n              class=\"w-25 mr-3\">\n           <div class=\"media-body\">\n             <h5 class=\"text-primary\">" + show.name + "</h5>\n             <div><small>" + show.summary + "</small></div>\n             <button class=\"btn btn-outline-light btn-sm Show-getEpisodes\">\n               Episodes\n             </button>\n           </div>\n         </div>\n       </div>\n      ");
+        var $show = $("<div data-show-id=\"" + show.id + "\" class=\"Show col-md-12 col-lg-6 mb-4\">\n         <div class=\"media\">\n           <img\n              src=" + show.image + "\n              alt=" + show.name + "\n              class=\"w-25 mr-3\">\n           <div class=\"media-body\">\n             <h5 class=\"text-primary\">" + show.name + "</h5>\n             <div><small>" + show.summary + "</small></div>\n             <button class=\"btn btn-outline-light btn-sm Show-getEpisodes\">\n               Episodes\n             </button>\n           </div>\n         </div>\n       </div>\n      ");
         $showsList.append($show);
     }
 }
@@ -12869,9 +12845,35 @@ $searchForm.on("submit", function (evt) {
 /** Given a show ID, get from API and return (promise) array of episodes:
  *      { id, name, season, number }
  */
-// async function getEpisodesOfShow(id) { }
-/** Write a clear docstring for this function... */
-// function populateEpisodes(episodes) { }
+function getEpisodesOfShow(id) {
+    return __awaiter(this, void 0, void 0, function () {
+        var res;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, axios_1.default.get(API_BASE_URL + "shows/" + id + "/episodes")];
+                case 1:
+                    res = _a.sent();
+                    console.log(res.data);
+                    return [2 /*return*/, res.data.map(function (result) { return ({
+                            id: result.episode.id,
+                            name: result.episode.name,
+                            season: result.episode.season,
+                            number: result.episode.number
+                        }); })];
+            }
+        });
+    });
+}
+/** Given list of episodes, create markup for each and to DOM  */
+function populateEpisodes(episodes) {
+    $episodesList.empty();
+    for (var _i = 0, episodes_1 = episodes; _i < episodes_1.length; _i++) {
+        var episode = episodes_1[_i];
+        var $episode = $("<li>" + episode.name + " (season " + episode.season + " number " + episode.number + ")</li>");
+        $episodesList.append($episode);
+    }
+    $episodesArea.show();
+}
 
 
 /***/ })
